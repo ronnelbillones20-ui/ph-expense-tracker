@@ -3,22 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bill-Ones | PH Expense Tracker</title>
+    <title>Bill-Ones Expense Tracker | Night Forest</title>
     <style>
         :root {
-            --glass-bg: rgba(10, 15, 25, 0.8);
+            --glass-bg: rgba(15, 25, 35, 0.7);
             --glass-border: rgba(255, 255, 255, 0.1);
-            --accent-green: #2ecc71;
-            --accent-blue: #3498db;
-            --danger-red: #e74c3c;
-            --text-main: #f8fafc;
-            --input-fill: #16213e; /* Solid dark background for form elements */
+            --accent-green: #4ade80;
+            --accent-blue: #38bdf8;
+            --danger-red: #fb7185;
+            --text-main: #f1f5f9;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', 'Segoe UI', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
 
         body {
-            background: radial-gradient(circle at top right, #064e3b, #020617 80%);
+            background: linear-gradient(135deg, #0f172a 0%, #064e3b 100%);
             background-attachment: fixed;
             color: var(--text-main);
             min-height: 100vh;
@@ -27,139 +26,321 @@
             justify-content: center;
         }
 
-        .container { width: 100%; max-width: 850px; display: flex; flex-direction: column; gap: 20px; }
+        .container {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
 
+        /* Glassmorphism Card Style */
         .glass-card {
             background: var(--glass-bg);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--glass-border);
-            border-radius: 20px;
+            border-radius: 16px;
             padding: 25px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
-        .brand-header { text-align: center; margin-bottom: 20px; }
-        .brand-header h1 { 
-            font-size: 2.4rem; 
-            letter-spacing: 4px; 
-            background: linear-gradient(to right, #4ade80, #38bdf8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-transform: uppercase;
-        }
+        h1 { font-weight: 300; letter-spacing: 2px; text-align: center; margin-bottom: 10px; }
 
-        .budget-config {
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        /* Dashboard & Progress */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
             margin-bottom: 20px;
-            padding: 15px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 12px;
         }
 
-        /* --- FORM STYLING (DARK DROPDOWNS) --- */
-        .form-grid {
+        .stat-box { text-align: center; }
+        .stat-label { font-size: 0.8rem; opacity: 0.7; text-transform: uppercase; }
+        .stat-value { font-size: 1.5rem; font-weight: bold; color: var(--accent-green); }
+
+        .budget-container { margin-top: 15px; }
+        .progress-bar-bg {
+            background: rgba(255,255,255,0.1);
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 8px 0;
+        }
+        #progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--accent-green);
+            transition: width 0.5s ease, background 0.3s;
+        }
+
+        /* Form Controls */
+        .form-group {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
         }
 
         input, select, button {
-            background: var(--input-fill);
+            background: rgba(255,255,255,0.05);
             border: 1px solid var(--glass-border);
-            padding: 14px;
-            border-radius: 10px;
+            padding: 12px;
+            border-radius: 8px;
             color: white;
-            transition: 0.3s;
-            appearance: none; /* Removes default OS styling */
-        }
-
-        /* Specifically target the options inside the dropdown */
-        select option {
-            background-color: #0f172a; /* Force dark background */
-            color: white;
-            padding: 10px;
-        }
-
-        input:focus, select:focus {
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
             outline: none;
         }
 
-        .btn-add { background: var(--accent-blue); color: white; font-weight: 700; cursor: pointer; border: none; }
-        .btn-add:hover { filter: brightness(1.2); transform: translateY(-2px); }
-
-        /* Dashboard/Stats */
-        .progress-bar-bg {
-            background: rgba(255,255,255,0.05);
-            height: 12px;
-            border-radius: 6px;
-            overflow: hidden;
-            margin: 10px 0;
-        }
-        #progress-fill { height: 100%; width: 0%; background: var(--accent-green); transition: width 0.6s ease; }
-
-        .view-tabs { display: flex; gap: 8px; justify-content: center; margin: 20px 0; }
-        .tab { background: transparent; border: none; opacity: 0.5; padding: 8px 20px; cursor: pointer; }
-        .tab.active { opacity: 1; border-bottom: 2px solid var(--accent-blue); color: var(--accent-blue); }
-
-        /* Transaction List */
-        .history-list { max-height: 300px; overflow-y: auto; margin-bottom: 15px; }
-        .expense-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 15px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+        button {
+            cursor: pointer;
+            background: var(--accent-blue);
+            color: #0f172a;
+            font-weight: bold;
+            transition: transform 0.2s, opacity 0.2s;
         }
 
-        /* Summary Table */
-        .summary-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 10px; }
-        .summary-table th { text-align: left; opacity: 0.6; padding-bottom: 8px; }
-        .summary-table td { padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        button:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn-export { background: transparent; border: 1px solid var(--accent-blue); color: var(--accent-blue); }
 
-        .del-btn { color: var(--danger-red); cursor: pointer; background: none; border: none; font-size: 1.2rem; }
+        /* Filter Tabs */
+        .tabs { display: flex; gap: 10px; justify-content: center; margin-bottom: 15px; }
+        .tab-btn { background: transparent; color: white; border: none; padding: 5px 15px; opacity: 0.5; }
+        .tab-btn.active { opacity: 1; border-bottom: 2px solid var(--accent-green); }
+
+        /* Table/List */
+        .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .search-bar { width: 200px; font-size: 0.9rem; }
+
+        .expense-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .expense-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr 100px 40px;
+            padding: 12px;
+            border-bottom: 1px solid var(--glass-border);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .item-category { font-size: 0.75rem; opacity: 0.6; display: block; }
+        .item-amount { font-weight: bold; text-align: right; }
+        .delete-btn { color: var(--danger-red); background: none; border: none; cursor: pointer; text-align: center; }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .expense-item { grid-template-columns: 1fr 80px 40px; }
+            .item-date { display: none; }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header class="glass-card">
-        <div class="brand-header">
-            <h1>Bill-Ones</h1>
-            <p style="font-size: 0.8rem; opacity: 0.6; letter-spacing: 1px;">Smart PH Recovery & Tracker</p>
-        </div>
-
-        <div class="budget-config">
-            <span style="font-size: 0.85rem;">Monthly Goal:</span>
-            <input type="number" id="user-budget" value="15000" oninput="updateBudget()" style="width: 120px; text-align: center;">
-        </div>
-
-        <div>
+        <h1>Bill-Ones Tracker</h1>
+        <div class="budget-container">
             <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
-                <span id="stat-label">Total Spent</span>
-                <span id="percent-label">0%</span>
+                <span>Monthly Budget: <span id="budget-display">₱10,000.00</span></span>
+                <span id="percent-display">0%</span>
             </div>
-            <div class="progress-bar-bg"><div id="progress-fill"></div></div>
-            <h2 id="total-amount" style="text-align: center; margin-top: 10px; color: var(--accent-green);">₱0.00</h2>
+            <div class="progress-bar-bg">
+                <div id="progress-fill"></div>
+            </div>
+        </div>
+        
+        <div class="dashboard-grid">
+            <div class="stat-box">
+                <p class="stat-label">Total Spent</p>
+                <p class="stat-value" id="total-spent">₱0.00</p>
+            </div>
         </div>
 
-        <div class="view-tabs">
-            <button class="tab" onclick="changeView('daily', this)">Daily</button>
-            <button class="tab active" onclick="changeView('monthly', this)">Monthly</button>
-            <button class="tab" onclick="changeView('yearly', this)">Yearly</button>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="setFilter('daily', this)">Daily</button>
+            <button class="tab-btn" onclick="setFilter('monthly', this)">Monthly</button>
+            <button class="tab-btn" onclick="setFilter('yearly', this)">Yearly</button>
         </div>
     </header>
 
     <section class="glass-card">
-        <form id="tracker-form" class="form-grid">
-            <input type="text" id="name" placeholder="Item Name" required>
-            <input type="number" id="amount" placeholder="Amount (PHP)" required step="0.01">
-            <select id="cat">
+        <form id="expense-form" class="form-group">
+            <input type="text" id="item-name" placeholder="Item Name (e.g. Lazada)" required>
+            <input type="number" id="item-amount" placeholder="Amount (PHP)" step="0.01" required>
+            <select id="item-category">
                 <option value="Food">Food</option>
                 <option value="Transpo">Transpo</option>
-                <option value="Bills">Bills
+                <option value="Bills">Bills</option>
+                <option value="Shopping">Shopee/Lazada</option>
+                <option value="Others">Others</option>
+            </select>
+            <input type="date" id="item-date" required>
+            <button type="submit">Add Expense</button>
+        </form>
+    </section>
+
+    <section class="glass-card">
+        <div class="history-header">
+            <h3>Transaction History</h3>
+            <input type="text" id="search" class="search-bar" placeholder="Search items..." oninput="renderExpenses()">
+        </div>
+        <div id="expense-list" class="expense-list">
+            </div>
+        <div style="margin-top: 20px; display: flex; gap: 10px;">
+            <button class="btn-export" onclick="exportToCSV()">Export to CSV</button>
+            <button class="btn-export" style="border-color: var(--danger-red); color: var(--danger-red);" onclick="clearAll()">Clear Data</button>
+        </div>
+    </section>
+</div>
+
+<script>
+    /**
+     * CONFIGURATION
+     */
+    let expenses = JSON.parse(localStorage.getItem('ph_expenses')) || [];
+    let currentFilter = 'monthly'; // Default view
+    const MONTHLY_BUDGET = 15000; // You can change this or add an input to set it dynamically
+
+    // PHP Currency Formatter
+    const phFormatter = new Intl.NumberFormat('en-PH', {
+        style: 'currency',
+        currency: 'PHP',
+    });
+
+    const expenseForm = document.getElementById('expense-form');
+    const expenseList = document.getElementById('expense-list');
+
+    /**
+     * CORE LOGIC
+     */
+
+    // Set today as default date
+    document.getElementById('item-date').valueAsDate = new Date();
+
+    expenseForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const newExpense = {
+            id: Date.now(),
+            name: document.getElementById('item-name').value,
+            amount: parseFloat(document.getElementById('item-amount').value),
+            category: document.getElementById('item-category').value,
+            date: document.getElementById('item-date').value
+        };
+
+        expenses.push(newExpense);
+        saveAndRender();
+        expenseForm.reset();
+        document.getElementById('item-date').valueAsDate = new Date();
+    });
+
+    function setFilter(filter, el) {
+        currentFilter = filter;
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        el.classList.add('active');
+        renderExpenses();
+    }
+
+    function deleteExpense(id) {
+        expenses = expenses.filter(exp => exp.id !== id);
+        saveAndRender();
+    }
+
+    function saveAndRender() {
+        localStorage.setItem('ph_expenses', JSON.stringify(expenses));
+        renderExpenses();
+    }
+
+    function renderExpenses() {
+        const searchTerm = document.getElementById('search').value.toLowerCase();
+        const now = new Date();
+        
+        // Filter logic
+        const filtered = expenses.filter(exp => {
+            const expDate = new Date(exp.date);
+            const matchesSearch = exp.name.toLowerCase().includes(searchTerm);
+            
+            let matchesTime = true;
+            if (currentFilter === 'daily') {
+                matchesTime = expDate.toDateString() === now.toDateString();
+            } else if (currentFilter === 'monthly') {
+                matchesTime = expDate.getMonth() === now.getMonth() && expDate.getFullYear() === now.getFullYear();
+            } else if (currentFilter === 'yearly') {
+                matchesTime = expDate.getFullYear() === now.getFullYear();
+            }
+
+            return matchesSearch && matchesTime;
+        });
+
+        // Update Stats
+        const total = filtered.reduce((sum, exp) => sum + exp.amount, 0);
+        document.getElementById('total-spent').innerText = phFormatter.format(total);
+        
+        updateProgressBar(total);
+
+        // Render List
+        expenseList.innerHTML = filtered.sort((a,b) => new Date(b.date) - new Date(a.date)).map(exp => `
+            <div class="expense-item">
+                <div>
+                    <strong>${exp.name}</strong>
+                    <span class="item-category">${exp.category} • ${exp.date}</span>
+                </div>
+                <div class="item-amount">${phFormatter.format(exp.amount)}</div>
+                <button class="delete-btn" onclick="deleteExpense(${exp.id})">✕</button>
+            </div>
+        `).join('');
+    }
+
+    function updateProgressBar(currentSpend) {
+        const fill = document.getElementById('progress-fill');
+        const percentText = document.getElementById('percent-display');
+        const budgetDisplay = document.getElementById('budget-display');
+        
+        const percentage = Math.min((currentSpend / MONTHLY_BUDGET) * 100, 100);
+        
+        budgetDisplay.innerText = phFormatter.format(MONTHLY_BUDGET);
+        percentText.innerText = Math.round((currentSpend / MONTHLY_BUDGET) * 100) + '%';
+        fill.style.width = percentage + '%';
+        
+        // Alert Color Change
+        fill.style.background = currentSpend > MONTHLY_BUDGET ? 'var(--danger-red)' : 'var(--accent-green)';
+    }
+
+    /**
+     * DATA EXPORT
+     */
+    function exportToCSV() {
+        if (expenses.length === 0) return alert("No data to export!");
+        
+        let csvContent = "data:text/csv;charset=utf-8,Date,Item,Category,Amount\n";
+        expenses.forEach(exp => {
+            csvContent += `${exp.date},${exp.name},${exp.category},${exp.amount}\n`;
+        });
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `Expenses_Export_${new Date().toLocaleDateString()}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    function clearAll() {
+        if(confirm("Are you sure you want to delete all records?")) {
+            expenses = [];
+            saveAndRender();
+        }
+    }
+
+    // Initial Load
+    renderExpenses();
+</script>
+
+</body>
+</html>
