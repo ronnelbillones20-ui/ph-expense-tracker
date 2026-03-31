@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bill-Ones Tracker | Cloud Sync</title>
+    <title>Bill-Ones Expense Tracker | Night Forest</title>
     <style>
+        /* Existing root variables and base styles */
         :root {
             --glass-bg: rgba(15, 25, 35, 0.7);
             --glass-border: rgba(255, 255, 255, 0.1);
@@ -14,7 +15,7 @@
             --text-main: #f1f5f9;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
 
         body {
             background: linear-gradient(135deg, #0f172a 0%, #064e3b 100%);
@@ -31,8 +32,8 @@
         /* Login Screen Overlay */
         #login-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(10, 20, 30, 0.95); z-index: 100;
-            display: flex; align-items: center; justify-content: center; backdrop-filter: blur(15px);
+            background: rgba(10, 20, 30, 0.9); z-index: 100;
+            display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px);
         }
 
         .glass-card {
@@ -44,51 +45,64 @@
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
-        .user-info {
-            display: flex; justify-content: space-between; align-items: center;
-            font-size: 0.8rem; margin-bottom: 10px; padding: 8px 15px;
-            background: rgba(255,255,255,0.05); border-radius: 20px;
+        /* Budget Customization UI */
+        .budget-settings {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
         }
 
-        .budget-settings { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 0.9rem; }
         .budget-input {
-            width: 100px; padding: 4px; background: rgba(255,255,255,0.1);
-            border: 1px solid var(--glass-border); border-radius: 4px; color: var(--accent-green);
-            outline: none;
+            width: 100px;
+            padding: 5px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid var(--glass-border);
+            border-radius: 4px;
+            color: var(--accent-green);
+            font-weight: bold;
+        }
+
+        .user-info {
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 0.8rem; margin-bottom: 10px; padding: 5px 15px;
+            background: rgba(255,255,255,0.05); border-radius: 20px;
         }
 
         h1 { font-weight: 300; letter-spacing: 2px; text-align: center; margin-bottom: 15px; }
 
-        .stat-value { font-size: 2rem; font-weight: bold; color: var(--accent-green); text-align: center; }
+        .stat-value { font-size: 1.5rem; font-weight: bold; color: var(--accent-green); text-align: center; }
         
-        .progress-bar-bg { background: rgba(255,255,255,0.1); height: 12px; border-radius: 6px; overflow: hidden; margin: 10px 0; }
-        #progress-fill { height: 100%; width: 0%; background: var(--accent-green); transition: width 0.6s ease; }
+        .progress-bar-bg {
+            background: rgba(255,255,255,0.1); height: 10px; border-radius: 5px;
+            overflow: hidden; margin: 8px 0;
+        }
+        #progress-fill { height: 100%; width: 0%; background: var(--accent-green); transition: width 0.5s ease; }
 
-        .form-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+        .form-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
         input, select, button { background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); padding: 12px; border-radius: 8px; color: white; outline: none; }
-        button { cursor: pointer; background: var(--accent-blue); color: #0f172a; font-weight: bold; border: none; transition: opacity 0.2s; }
-        button:disabled { opacity: 0.4; cursor: not-allowed; }
+        button { cursor: pointer; background: var(--accent-blue); color: #0f172a; font-weight: bold; }
+        .logout-btn { background: transparent; border: none; color: var(--danger-red); cursor: pointer; }
 
         .tabs { display: flex; gap: 10px; justify-content: center; margin-bottom: 15px; }
-        .tab-btn { background: transparent; border: none; color: white; opacity: 0.5; padding: 8px 15px; cursor: pointer; }
+        .tab-btn { background: transparent; border: none; color: white; opacity: 0.5; padding: 5px 10px; cursor: pointer; }
         .tab-btn.active { opacity: 1; border-bottom: 2px solid var(--accent-green); }
 
-        .expense-list { max-height: 400px; overflow-y: auto; margin-top: 10px; }
-        .expense-item { display: grid; grid-template-columns: 1fr 120px 40px; padding: 12px; border-bottom: 1px solid var(--glass-border); align-items: center; }
-        .item-category { font-size: 0.7rem; opacity: 0.5; display: block; text-transform: uppercase; }
-        
-        #loading-indicator { display: none; text-align: center; font-size: 0.8rem; color: var(--accent-blue); margin-bottom: 10px; font-style: italic; }
+        .expense-list { max-height: 400px; overflow-y: auto; }
+        .expense-item { display: grid; grid-template-columns: 1fr 1fr 100px 40px; padding: 12px; border-bottom: 1px solid var(--glass-border); }
+        .item-category { font-size: 0.75rem; opacity: 0.6; display: block; }
+        .delete-btn { color: var(--danger-red); background: none; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div id="login-screen">
-    <div class="glass-card" style="width: 90%; max-width: 380px; text-align: center;">
-        <h1>Bill-Ones</h1>
-        <p style="font-size: 0.85rem; margin-bottom: 20px; opacity: 0.8;">Enter email to sync your data cloud</p>
+    <div class="glass-card" style="width: 90%; max-width: 400px; text-align: center;">
+        <h1>Welcome</h1>
         <form id="login-form" style="display: flex; flex-direction: column; gap: 15px;">
             <input type="email" id="user-email" placeholder="email@example.com" required>
-            <button type="submit">Access My Tracker</button>
+            <button type="submit">Access Tracker</button>
         </form>
     </div>
 </div>
@@ -96,27 +110,28 @@
 <div class="container">
     <header class="glass-card">
         <div class="user-info">
-            <span>👤 <strong id="active-user-display">---</strong></span>
-            <button style="background:none; color:var(--danger-red); font-size:0.75rem; cursor:pointer;" onclick="logout()">LOGOUT</button>
+            <span>Account: <strong id="active-user-display">None</strong></span>
+            <button class="logout-btn" onclick="logout()">LOGOUT</button>
         </div>
+        <h1>Bill-Ones Tracker</h1>
         
-        <div id="loading-indicator">Syncing with Google Sheets...</div>
-
         <div class="budget-container">
             <div class="budget-settings">
                 <span>Monthly Budget: ₱</span>
-                <input type="number" id="budget-input" class="budget-input" value="15000" onchange="saveBudgetLocally()">
+                <input type="number" id="budget-input" class="budget-input" value="15000" onchange="updateBudgetConfig()">
             </div>
             <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
                 <span id="budget-display">₱15,000.00</span>
                 <span id="percent-display">0%</span>
             </div>
-            <div class="progress-bar-bg"><div id="progress-fill"></div></div>
+            <div class="progress-bar-bg">
+                <div id="progress-fill"></div>
+            </div>
         </div>
         
         <div style="margin-top: 15px;">
+            <p style="font-size: 0.8rem; opacity: 0.7; text-align: center;">TOTAL SPENT</p>
             <p class="stat-value" id="total-spent">₱0.00</p>
-            <p style="font-size: 0.75rem; opacity: 0.6; text-align: center; letter-spacing: 2px;">TOTAL SPENT</p>
         </div>
 
         <div class="tabs">
@@ -134,114 +149,94 @@
                 <option value="Food">Food</option>
                 <option value="Transpo">Transpo</option>
                 <option value="Bills">Bills</option>
-                <option value="Shopping">Shopping</option>
+                <option value="Shopping">Shopee/Lazada</option>
                 <option value="Others">Others</option>
             </select>
             <input type="date" id="item-date" required>
-            <button type="submit" id="add-btn">Save to Cloud</button>
+            <button type="submit">Add Expense</button>
         </form>
     </section>
 
     <section class="glass-card">
         <div id="expense-list" class="expense-list"></div>
+        <div style="margin-top: 20px; display: flex; gap: 10px;">
+            <button style="background: transparent; border: 1px solid var(--accent-blue); color: var(--accent-blue);" onclick="exportToCSV()">Export CSV</button>
+            <button style="background: transparent; border: 1px solid var(--danger-red); color: var(--danger-red);" onclick="clearAll()">Clear Data</button>
+        </div>
     </section>
 </div>
 
 <script>
-    // --- 1. CONFIGURATION ---
-    // REPLACE the URL below with your Google Apps Script Web App URL
-    const SCRIPT_URL = "YOUR_GOOGLE_SCRIPT_WEB_APP_URL_HERE"; 
-    
-    let currentUser = localStorage.getItem('bill_ones_email') || null;
+    let currentUser = localStorage.getItem('bill_ones_active_user') || null;
     let expenses = [];
+    let currentBudget = 15000;
     let currentFilter = 'monthly';
+
     const phFormatter = new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' });
 
-    // --- 2. INITIALIZATION ---
-    async function init() {
-        if (!currentUser) {
-            document.getElementById('login-screen').style.display = 'flex';
-        } else {
+    function initApp() {
+        if (currentUser) {
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('active-user-display').innerText = currentUser;
             
-            // Load saved budget
+            // Load User Data
+            expenses = JSON.parse(localStorage.getItem(`expenses_${currentUser}`)) || [];
+            
+            // Load User Specific Budget
             const savedBudget = localStorage.getItem(`budget_${currentUser}`);
-            if (savedBudget) document.getElementById('budget-input').value = savedBudget;
-            
-            await fetchFromCloud();
-        }
-    }
-
-    // --- 3. CLOUD SYNC LOGIC ---
-    async function fetchFromCloud() {
-        toggleLoading(true);
-        try {
-            const response = await fetch(SCRIPT_URL, {
-                method: "POST",
-                body: JSON.stringify({ action: "get", email: currentUser })
-            });
-            const data = await response.json();
-            
-            if (Array.isArray(data)) {
-                expenses = data.map(row => ({
-                    date: row[1],
-                    name: row[2],
-                    category: row[3],
-                    amount: parseFloat(row[4]) || 0
-                }));
+            if (savedBudget) {
+                currentBudget = parseFloat(savedBudget);
+                document.getElementById('budget-input').value = currentBudget;
             }
-            renderExpenses();
-        } catch (e) {
-            console.error("Fetch Error:", e);
-        }
-        toggleLoading(false);
-    }
-
-    async function sendToCloud(newExp) {
-        toggleLoading(true);
-        const budgetVal = document.getElementById('budget-input').value;
-        try {
-            await fetch(SCRIPT_URL, {
-                method: "POST",
-                mode: "no-cors", // Required for Google Scripts to avoid CORS errors
-                body: JSON.stringify({
-                    action: "add",
-                    email: currentUser,
-                    date: newExp.date,
-                    name: newExp.name,
-                    category: newExp.category,
-                    amount: newExp.amount,
-                    budget: budgetVal
-                })
-            });
             
-            // Optimistic Update: Add to UI immediately
-            expenses.unshift(newExp);
             renderExpenses();
-        } catch (e) {
-            alert("Error: Could not sync with Google Sheets.");
         }
-        toggleLoading(false);
     }
 
-    // --- 4. UI LOGIC ---
-    function toggleLoading(show) {
-        const indicator = document.getElementById('loading-indicator');
-        const btn = document.getElementById('add-btn');
-        if (indicator) indicator.style.display = show ? 'block' : 'none';
-        if (btn) btn.disabled = show;
+    // Update budget when input changes
+    function updateBudgetConfig() {
+        const newVal = parseFloat(document.getElementById('budget-input').value);
+        if (newVal > 0) {
+            currentBudget = newVal;
+            localStorage.setItem(`budget_${currentUser}`, currentBudget);
+            renderExpenses();
+        }
     }
 
-    function saveBudgetLocally() {
-        localStorage.setItem(`budget_${currentUser}`, document.getElementById('budget-input').value);
+    document.getElementById('login-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        currentUser = document.getElementById('user-email').value.toLowerCase();
+        localStorage.setItem('bill_ones_active_user', currentUser);
+        initApp();
+    });
+
+    function logout() {
+        localStorage.removeItem('bill_ones_active_user');
+        location.reload();
+    }
+
+    document.getElementById('expense-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const newExp = {
+            id: Date.now(),
+            name: document.getElementById('item-name').value,
+            amount: parseFloat(document.getElementById('item-amount').value),
+            category: document.getElementById('item-category').value,
+            date: document.getElementById('item-date').value
+        };
+        expenses.push(newExp);
+        saveAndRender();
+        e.target.reset();
+        document.getElementById('item-date').valueAsDate = new Date();
+    });
+
+    function saveAndRender() {
+        localStorage.setItem(`expenses_${currentUser}`, JSON.stringify(expenses));
         renderExpenses();
     }
 
     function renderExpenses() {
-        const budget = parseFloat(document.getElementById('budget-input').value) || 1;
         const now = new Date();
-        
         const filtered = expenses.filter(exp => {
             const d = new Date(exp.date);
             if (currentFilter === 'daily') return d.toDateString() === now.toDateString();
@@ -252,54 +247,28 @@
 
         const total = filtered.reduce((s, e) => s + e.amount, 0);
         document.getElementById('total-spent').innerText = phFormatter.format(total);
-        document.getElementById('budget-display').innerText = phFormatter.format(budget);
+        document.getElementById('budget-display').innerText = phFormatter.format(currentBudget);
 
-        const percent = Math.round((total / budget) * 100);
+        const percent = Math.round((total / currentBudget) * 100);
         document.getElementById('percent-display').innerText = percent + '%';
+        
         const fill = document.getElementById('progress-fill');
         fill.style.width = Math.min(percent, 100) + '%';
-        fill.style.background = total > budget ? 'var(--danger-red)' : 'var(--accent-green)';
+        fill.style.background = total > currentBudget ? 'var(--danger-red)' : 'var(--accent-green)';
 
-        const listContainer = document.getElementById('expense-list');
-        const sortedList = filtered.sort((a,b) => new Date(b.date) - new Date(a.date));
-
-        if (sortedList.length === 0) {
-            listContainer.innerHTML = '<p style="text-align:center; opacity:0.4; padding:20px;">No expenses recorded.</p>';
-            return;
-        }
-
-        listContainer.innerHTML = sortedList.map(exp => `
+        document.getElementById('expense-list').innerHTML = filtered.sort((a,b) => new Date(b.date) - new Date(a.date)).map(exp => `
             <div class="expense-item">
-                <div>
-                    <strong>${exp.name}</strong>
-                    <span class="item-category">${exp.category} • ${exp.date}</span>
-                </div>
+                <div><strong>${exp.name}</strong><span class="item-category">${exp.category}</span></div>
                 <div style="text-align:right"><strong>${phFormatter.format(exp.amount)}</strong></div>
-                <div style="text-align:center; opacity:0.3; font-size:0.8rem;">☁️</div>
+                <button class="delete-btn" onclick="deleteExp(${exp.id})">✕</button>
             </div>
         `).join('');
     }
 
-    // --- 5. EVENT LISTENERS ---
-    document.getElementById('login-form').addEventListener('submit', (e) => {
-        e.preventDefault();
-        currentUser = document.getElementById('user-email').value.toLowerCase();
-        localStorage.setItem('bill_ones_email', currentUser);
-        init();
-    });
-
-    document.getElementById('expense-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const newExp = {
-            date: document.getElementById('item-date').value,
-            name: document.getElementById('item-name').value,
-            category: document.getElementById('item-category').value,
-            amount: parseFloat(document.getElementById('item-amount').value)
-        };
-        await sendToCloud(newExp);
-        e.target.reset();
-        document.getElementById('item-date').valueAsDate = new Date();
-    });
+    function deleteExp(id) {
+        expenses = expenses.filter(e => e.id !== id);
+        saveAndRender();
+    }
 
     function setFilter(f, el) {
         currentFilter = f;
@@ -308,16 +277,20 @@
         renderExpenses();
     }
 
-    function logout() {
-        if(confirm("Sign out and disconnect cloud sync?")) {
-            localStorage.removeItem('bill_ones_email');
-            location.reload();
-        }
+    function clearAll() { if(confirm("Clear all?")) { expenses = []; saveAndRender(); } }
+    
+    function exportToCSV() {
+        let csv = "Date,Item,Amount\n" + expenses.map(e => `${e.date},${e.name},${e.amount}`).join("\n");
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.setAttribute('href', url);
+        a.setAttribute('download', 'expenses.csv');
+        a.click();
     }
 
-    // Run on startup
     document.getElementById('item-date').valueAsDate = new Date();
-    init();
+    initApp();
 </script>
 </body>
 </html>
