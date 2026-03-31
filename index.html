@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bill-Ones Expense Tracker | Night Forest</title>
     <style>
+        /* Existing root variables and base styles */
         :root {
             --glass-bg: rgba(15, 25, 35, 0.7);
             --glass-border: rgba(255, 255, 255, 0.1);
@@ -14,7 +15,7 @@
             --text-main: #f1f5f9;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
 
         body {
             background: linear-gradient(135deg, #0f172a 0%, #064e3b 100%);
@@ -26,146 +27,79 @@
             justify-content: center;
         }
 
-        .container {
-            width: 100%;
-            max-width: 900px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+        .container { width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 20px; }
 
-        /* Login Overlay */
+        /* Login Screen Overlay */
         #login-screen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(10, 20, 30, 0.9);
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(10px);
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(10, 20, 30, 0.9); z-index: 100;
+            display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px);
         }
 
-        .login-card {
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-        }
-
-        /* Glassmorphism Card Style */
         .glass-card {
             background: var(--glass-bg);
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--glass-border);
             border-radius: 16px;
             padding: 25px;
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
-        .user-info {
+        /* Budget Customization UI */
+        .budget-settings {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            font-size: 0.8rem;
-            margin-bottom: 10px;
-            padding: 5px 15px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 20px;
-        }
-
-        h1 { font-weight: 300; letter-spacing: 2px; text-align: center; margin-bottom: 10px; }
-
-        /* Dashboard & Progress */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .stat-box { text-align: center; }
-        .stat-label { font-size: 0.8rem; opacity: 0.7; text-transform: uppercase; }
-        .stat-value { font-size: 1.5rem; font-weight: bold; color: var(--accent-green); }
-
-        .budget-container { margin-top: 15px; }
-        .progress-bar-bg {
-            background: rgba(255,255,255,0.1);
-            height: 10px;
-            border-radius: 5px;
-            overflow: hidden;
-            margin: 8px 0;
-        }
-        #progress-fill {
-            height: 100%;
-            width: 0%;
-            background: var(--accent-green);
-            transition: width 0.5s ease, background 0.3s;
-        }
-
-        /* Form Controls */
-        .form-group {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 10px;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
         }
 
-        input, select, button {
-            background: rgba(255,255,255,0.05);
+        .budget-input {
+            width: 100px;
+            padding: 5px;
+            background: rgba(255,255,255,0.1);
             border: 1px solid var(--glass-border);
-            padding: 12px;
-            border-radius: 8px;
-            color: white;
-            outline: none;
-        }
-
-        button {
-            cursor: pointer;
-            background: var(--accent-blue);
-            color: #0f172a;
+            border-radius: 4px;
+            color: var(--accent-green);
             font-weight: bold;
-            transition: transform 0.2s, opacity 0.2s;
         }
 
-        button:hover { opacity: 0.9; transform: translateY(-1px); }
-        .btn-export { background: transparent; border: 1px solid var(--accent-blue); color: var(--accent-blue); }
-        .logout-btn { background: transparent; border: none; color: var(--danger-red); font-size: 0.7rem; padding: 5px; }
+        .user-info {
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 0.8rem; margin-bottom: 10px; padding: 5px 15px;
+            background: rgba(255,255,255,0.05); border-radius: 20px;
+        }
 
-        /* Filter Tabs */
+        h1 { font-weight: 300; letter-spacing: 2px; text-align: center; margin-bottom: 15px; }
+
+        .stat-value { font-size: 1.5rem; font-weight: bold; color: var(--accent-green); text-align: center; }
+        
+        .progress-bar-bg {
+            background: rgba(255,255,255,0.1); height: 10px; border-radius: 5px;
+            overflow: hidden; margin: 8px 0;
+        }
+        #progress-fill { height: 100%; width: 0%; background: var(--accent-green); transition: width 0.5s ease; }
+
+        .form-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+        input, select, button { background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); padding: 12px; border-radius: 8px; color: white; outline: none; }
+        button { cursor: pointer; background: var(--accent-blue); color: #0f172a; font-weight: bold; }
+        .logout-btn { background: transparent; border: none; color: var(--danger-red); cursor: pointer; }
+
         .tabs { display: flex; gap: 10px; justify-content: center; margin-bottom: 15px; }
-        .tab-btn { background: transparent; color: white; border: none; padding: 5px 15px; opacity: 0.5; }
+        .tab-btn { background: transparent; border: none; color: white; opacity: 0.5; padding: 5px 10px; cursor: pointer; }
         .tab-btn.active { opacity: 1; border-bottom: 2px solid var(--accent-green); }
 
-        /* List Styling */
         .expense-list { max-height: 400px; overflow-y: auto; }
-        .expense-item {
-            display: grid;
-            grid-template-columns: 1fr 1fr 100px 40px;
-            padding: 12px;
-            border-bottom: 1px solid var(--glass-border);
-            animation: slideIn 0.3s ease-out;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-10px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
+        .expense-item { display: grid; grid-template-columns: 1fr 1fr 100px 40px; padding: 12px; border-bottom: 1px solid var(--glass-border); }
         .item-category { font-size: 0.75rem; opacity: 0.6; display: block; }
-        .item-amount { font-weight: bold; text-align: right; }
-        .delete-btn { color: var(--danger-red); background: none; border: none; cursor: pointer; text-align: center; }
-
-        @media (max-width: 600px) {
-            .expense-item { grid-template-columns: 1fr 80px 40px; }
-        }
+        .delete-btn { color: var(--danger-red); background: none; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div id="login-screen">
-    <div class="glass-card login-card">
+    <div class="glass-card" style="width: 90%; max-width: 400px; text-align: center;">
         <h1>Welcome</h1>
-        <p style="margin-bottom: 20px; opacity: 0.8;">Enter email to monitor account</p>
         <form id="login-form" style="display: flex; flex-direction: column; gap: 15px;">
             <input type="email" id="user-email" placeholder="email@example.com" required>
             <button type="submit">Access Tracker</button>
@@ -180,9 +114,14 @@
             <button class="logout-btn" onclick="logout()">LOGOUT</button>
         </div>
         <h1>Bill-Ones Tracker</h1>
+        
         <div class="budget-container">
+            <div class="budget-settings">
+                <span>Monthly Budget: ₱</span>
+                <input type="number" id="budget-input" class="budget-input" value="15000" onchange="updateBudgetConfig()">
+            </div>
             <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
-                <span>Monthly Budget: <span id="budget-display">₱10,000.00</span></span>
+                <span id="budget-display">₱15,000.00</span>
                 <span id="percent-display">0%</span>
             </div>
             <div class="progress-bar-bg">
@@ -190,11 +129,9 @@
             </div>
         </div>
         
-        <div class="dashboard-grid">
-            <div class="stat-box">
-                <p class="stat-label">Total Spent</p>
-                <p class="stat-value" id="total-spent">₱0.00</p>
-            </div>
+        <div style="margin-top: 15px;">
+            <p style="font-size: 0.8rem; opacity: 0.7; text-align: center;">TOTAL SPENT</p>
+            <p class="stat-value" id="total-spent">₱0.00</p>
         </div>
 
         <div class="tabs">
@@ -223,8 +160,8 @@
     <section class="glass-card">
         <div id="expense-list" class="expense-list"></div>
         <div style="margin-top: 20px; display: flex; gap: 10px;">
-            <button class="btn-export" onclick="exportToCSV()">Export to CSV</button>
-            <button class="btn-export" style="border-color: var(--danger-red); color: var(--danger-red);" onclick="clearAll()">Clear Data</button>
+            <button style="background: transparent; border: 1px solid var(--accent-blue); color: var(--accent-blue);" onclick="exportToCSV()">Export CSV</button>
+            <button style="background: transparent; border: 1px solid var(--danger-red); color: var(--danger-red);" onclick="clearAll()">Clear Data</button>
         </div>
     </section>
 </div>
@@ -232,65 +169,64 @@
 <script>
     let currentUser = localStorage.getItem('bill_ones_active_user') || null;
     let expenses = [];
+    let currentBudget = 15000;
     let currentFilter = 'monthly';
-    const MONTHLY_BUDGET = 15000;
 
     const phFormatter = new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' });
 
-    // UI Elements
-    const loginScreen = document.getElementById('login-screen');
-    const loginForm = document.getElementById('login-form');
-    const activeUserDisplay = document.getElementById('active-user-display');
-    const expenseForm = document.getElementById('expense-form');
-    const expenseList = document.getElementById('expense-list');
-
-    /**
-     * AUTH LOGIC
-     */
     function initApp() {
         if (currentUser) {
-            loginScreen.style.display = 'none';
-            activeUserDisplay.innerText = currentUser;
-            // Load data specific to this email
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('active-user-display').innerText = currentUser;
+            
+            // Load User Data
             expenses = JSON.parse(localStorage.getItem(`expenses_${currentUser}`)) || [];
+            
+            // Load User Specific Budget
+            const savedBudget = localStorage.getItem(`budget_${currentUser}`);
+            if (savedBudget) {
+                currentBudget = parseFloat(savedBudget);
+                document.getElementById('budget-input').value = currentBudget;
+            }
+            
             renderExpenses();
-        } else {
-            loginScreen.style.display = 'flex';
         }
     }
 
-    loginForm.addEventListener('submit', (e) => {
+    // Update budget when input changes
+    function updateBudgetConfig() {
+        const newVal = parseFloat(document.getElementById('budget-input').value);
+        if (newVal > 0) {
+            currentBudget = newVal;
+            localStorage.setItem(`budget_${currentUser}`, currentBudget);
+            renderExpenses();
+        }
+    }
+
+    document.getElementById('login-form').addEventListener('submit', (e) => {
         e.preventDefault();
-        const email = document.getElementById('user-email').value.toLowerCase();
-        localStorage.setItem('bill_ones_active_user', email);
-        currentUser = email;
+        currentUser = document.getElementById('user-email').value.toLowerCase();
+        localStorage.setItem('bill_ones_active_user', currentUser);
         initApp();
     });
 
     function logout() {
-        if(confirm("Logout from account?")) {
-            localStorage.removeItem('bill_ones_active_user');
-            location.reload();
-        }
+        localStorage.removeItem('bill_ones_active_user');
+        location.reload();
     }
 
-    /**
-     * EXPENSE LOGIC
-     */
-    document.getElementById('item-date').valueAsDate = new Date();
-
-    expenseForm.addEventListener('submit', (e) => {
+    document.getElementById('expense-form').addEventListener('submit', (e) => {
         e.preventDefault();
-        const newExpense = {
+        const newExp = {
             id: Date.now(),
             name: document.getElementById('item-name').value,
             amount: parseFloat(document.getElementById('item-amount').value),
             category: document.getElementById('item-category').value,
             date: document.getElementById('item-date').value
         };
-        expenses.push(newExpense);
+        expenses.push(newExp);
         saveAndRender();
-        expenseForm.reset();
+        e.target.reset();
         document.getElementById('item-date').valueAsDate = new Date();
     });
 
@@ -302,72 +238,59 @@
     function renderExpenses() {
         const now = new Date();
         const filtered = expenses.filter(exp => {
-            const expDate = new Date(exp.date);
-            if (currentFilter === 'daily') return expDate.toDateString() === now.toDateString();
-            if (currentFilter === 'monthly') return expDate.getMonth() === now.getMonth() && expDate.getFullYear() === now.getFullYear();
-            if (currentFilter === 'yearly') return expDate.getFullYear() === now.getFullYear();
+            const d = new Date(exp.date);
+            if (currentFilter === 'daily') return d.toDateString() === now.toDateString();
+            if (currentFilter === 'monthly') return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+            if (currentFilter === 'yearly') return d.getFullYear() === now.getFullYear();
             return true;
         });
 
-        const total = filtered.reduce((sum, exp) => sum + exp.amount, 0);
+        const total = filtered.reduce((s, e) => s + e.amount, 0);
         document.getElementById('total-spent').innerText = phFormatter.format(total);
-        updateProgressBar(total);
+        document.getElementById('budget-display').innerText = phFormatter.format(currentBudget);
 
-        expenseList.innerHTML = filtered.sort((a,b) => new Date(b.date) - new Date(a.date)).map(exp => `
+        const percent = Math.round((total / currentBudget) * 100);
+        document.getElementById('percent-display').innerText = percent + '%';
+        
+        const fill = document.getElementById('progress-fill');
+        fill.style.width = Math.min(percent, 100) + '%';
+        fill.style.background = total > currentBudget ? 'var(--danger-red)' : 'var(--accent-green)';
+
+        document.getElementById('expense-list').innerHTML = filtered.sort((a,b) => new Date(b.date) - new Date(a.date)).map(exp => `
             <div class="expense-item">
-                <div>
-                    <strong>${exp.name}</strong>
-                    <span class="item-category">${exp.category} • ${exp.date}</span>
-                </div>
-                <div class="item-amount">${phFormatter.format(exp.amount)}</div>
-                <button class="delete-btn" onclick="deleteExpense(${exp.id})">✕</button>
+                <div><strong>${exp.name}</strong><span class="item-category">${exp.category}</span></div>
+                <div style="text-align:right"><strong>${phFormatter.format(exp.amount)}</strong></div>
+                <button class="delete-btn" onclick="deleteExp(${exp.id})">✕</button>
             </div>
         `).join('');
     }
 
-    function deleteExpense(id) {
-        expenses = expenses.filter(exp => exp.id !== id);
+    function deleteExp(id) {
+        expenses = expenses.filter(e => e.id !== id);
         saveAndRender();
     }
 
-    function setFilter(filter, el) {
-        currentFilter = filter;
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    function setFilter(f, el) {
+        currentFilter = f;
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         el.classList.add('active');
         renderExpenses();
     }
 
-    function updateProgressBar(currentSpend) {
-        const fill = document.getElementById('progress-fill');
-        const percentText = document.getElementById('percent-display');
-        const percentage = Math.min((currentSpend / MONTHLY_BUDGET) * 100, 100);
-        
-        document.getElementById('budget-display').innerText = phFormatter.format(MONTHLY_BUDGET);
-        percentText.innerText = Math.round((currentSpend / MONTHLY_BUDGET) * 100) + '%';
-        fill.style.width = percentage + '%';
-        fill.style.background = currentSpend > MONTHLY_BUDGET ? 'var(--danger-red)' : 'var(--accent-green)';
-    }
-
+    function clearAll() { if(confirm("Clear all?")) { expenses = []; saveAndRender(); } }
+    
     function exportToCSV() {
-        if (expenses.length === 0) return alert("No data to export!");
-        let csvContent = "data:text/csv;charset=utf-8,Date,Item,Category,Amount\n" + 
-            expenses.map(e => `${e.date},${e.name},${e.category},${e.amount}`).join("\n");
-        const link = document.createElement("a");
-        link.href = encodeURI(csvContent);
-        link.download = `Expenses_${currentUser}_${new Date().toLocaleDateString()}.csv`;
-        link.click();
+        let csv = "Date,Item,Amount\n" + expenses.map(e => `${e.date},${e.name},${e.amount}`).join("\n");
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.setAttribute('href', url);
+        a.setAttribute('download', 'expenses.csv');
+        a.click();
     }
 
-    function clearAll() {
-        if(confirm(`Clear ALL records for ${currentUser}?`)) {
-            expenses = [];
-            saveAndRender();
-        }
-    }
-
-    // Run on Load
+    document.getElementById('item-date').valueAsDate = new Date();
     initApp();
 </script>
-
 </body>
 </html>
